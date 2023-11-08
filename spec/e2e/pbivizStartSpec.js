@@ -98,7 +98,7 @@ describe("E2E - pbiviz start", () => {
         const pbivizProc = FileSystem.runPbivizAsync('start');
         startChecker(pbivizProc).then(() => {
             const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
-            try { 
+            try {
                 expect(fs.statSync(statisticFilePath).isFile()).toBe(true);
             } catch (error) {
                 expect(error).toBeNull();
@@ -112,7 +112,7 @@ describe("E2E - pbiviz start", () => {
         const pbivizProc = FileSystem.runPbivizAsync('start', '--no-stats');
         startChecker(pbivizProc).then(() => {
             const statisticFilePath = path.join(visualPath, 'webpack.statistics.dev.html');
-            try { 
+            try {
                 fs.statSync(statisticFilePath).isFile();
             } catch (error) {
                 expect(error).not.toBeNull();
@@ -196,6 +196,20 @@ describe("E2E - pbiviz start", () => {
                     }
                 );
             });
+        });
+
+        it("Should throw error if wrong path speciefied with --pbiviz-path flag", () => {
+            const pbivizPath = 'testPath.json';
+            let error;
+
+            try {
+                FileSystem.runPbiviz('start', undefined, `--pbiviz-path ${pbivizPath}`);
+            } catch (e) {
+                error = e
+            }
+            expect(error).toBeDefined();
+            expect(error.status).toBe(1);
+            expect(error.message).toContain("You must be in the root of a visual project to run this command.");
         });
 
 
